@@ -1,3 +1,22 @@
-.cursor-pointer{
-    cursor:pointer;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles */
+.active-link {
+  @apply bg-green-600 text-white;
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-navy-blue hover:bg-navy-blue-dark text-white font-bold py-2 px-4 rounded;
+  }
+  
+  .btn-success {
+    @apply bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded;
+  }
+  
+  .btn-warning {
+    @apply bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded;
+  }
 }

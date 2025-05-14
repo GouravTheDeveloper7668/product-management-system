@@ -1,72 +1,612 @@
-<div class="container-lg">
-    <div class="fs-2 fw-semibold">Dashboard</div>
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb mb-4">
-            <li class="breadcrumb-item">
-                <span>Home</span>
-            </li>
-            <li class="breadcrumb-item active"><span>Dashboard</span></li>
-        </ol>
-    </nav>
-    <div class="row">
-        <div class="col-lg-4">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="card mb-4">
-                        <div class="card-body p-4">
-                            <div class="row">
-                                <div class="col">
-                                        <div class="card-title fs-4 fw-semibold">Sale</div>
-                                            <div class="card-subtitle text-disabled">January - July 2022</div>
-                                            </div>
-                                            <div class="col text-end text-primary fs-4 fw-semibold">$613.200</div>
-                                            </div>
-                                        </div>
-                                        <div class="chart-wrapper mt-3" style="height:150px;">
-                                        <canvas class="chart" id="card-chart-new1" height="150" width="290" style="display: block; box-sizing: border-box; height: 150px; width: 290px;"></canvas>
-                                        </div>
-                                    </div>
-                                </div>
-                            <div class="col-lg-6">
-                                <div class="card mb-4">
-                                    <div class="card-body">
-                                        <div class="d-flex justify-content-between">
-                                            <div class="card-title text-disabled">Customers</div>
-                                                <div class="bg-primary bg-opacity-25 text-primary p-2 rounded">
-                                                    <svg class="icon icon-xl">
-                                                        <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-people"></use>
-                                                    </svg>
-                                                </div>
-                                            </div>
-                                        <div class="fs-4 fw-semibold pb-3">44.725</div><small class="text-danger">(-12.4%
-                                            <svg class="icon">
-                                            <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-arrow-bottom"></use>
-                                            </svg>)</small>
-                                        </div>
-                                     </div>
-                                </div>
-                            <div class="col-lg-6">
-                                <div class="card mb-4">
-                                    <div class="card-body">
-                                        <div class="d-flex justify-content-between">
-                                            <div class="card-title text-disabled">Orders</div>
-                                                <div class="bg-primary bg-opacity-25 text-primary p-2 rounded">
-                                                    <svg class="icon icon-xl">
-                                                        <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-cart"></use>
-                                                    </svg>
-                                                </div>
-                                            </div>
-                                        <div class="fs-4 fw-semibold pb-3">385</div><small class="text-success">(17.2%
-                                             <svg class="icon">
-                                                <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-arrow-top"></use>
-                                            </svg>)</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    <div class="col-lg-8">
-                <div class="card mb-4">
-            <div class="card-body p-4">
-        <div class="card-title fs-4 fw-semibold">Traffic</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-2 mb-4">
+  <div *ngFor="let card of statusCards"
+    class="status-card bg-white shadow p-2 cursor-pointer transition-all duration-200" [ngClass]="{'hover-total': card.id === 'total', 
+                  'hover-followups': card.id === 'followups',
+                  'hover-leads': card.id === 'leads', 
+                  'hover-processing': card.id === 'processing',
+                  'hover-delivered': card.id === 'delivered', 
+                  'hover-dropped': card.id === 'dropped',
+                  'hover-refunded': card.id === 'refunded'}" (click)="onCardClick(card)">
+    <div class="flex items-center">
+      <div class="p-2 text-white flex items-center justify-center" [ngClass]="getIconClass(card.id)">
+        <i class="fas fa-{{card.icon}} text-lg"></i>
+      </div>
+      <div class="ml-2">
+        <p class="text-sm text-gray-500">{{card.title}}</p>
+        <p class="text-lg font-semibold">{{card.count}}</p>
+        <p class="text-xs text-gray-500">{{card.subtitle}}</p>
+      </div>
     </div>
+  </div>
+</div>
+
+<div class="bg-white border-t-2 border-blue-900 shadow-xl p-4">
+  <!-- Responsive flex layout -->
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+
+    <!-- Search (Left Side) -->
+    <div class="flex w-full md:w-2/4 items-center space-x-2">
+      <input type="text" placeholder="Search anything..."
+        class="w-full px-4 py-2 bg-gray-200 focus:outline-none" />
+    
+      <button class="px-3 py-2 bg-blue-900 text-white hover:bg-orange-500 transition-colors duration-200">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+      </button>
+          
+      <button class="px-3 py-2 bg-blue-900 text-white hover:bg-orange-500 transition-colors duration-200"
+        (click)="toggleFilter()">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+        stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L15 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 019 21v-7.586L3.293 6.707A1 1 0 013 6V4z" />
+      </svg>
+      </button>
+    </div>
+
+    <!-- Entities (Right Side) -->
+    <div class="text-sm text-gray-700 text-center md:text-right w-full md:w-1/2">
+      Showing <span class="font-medium">1</span> to <span class="font-medium">10</span> of
+      <span class="font-medium">97</span> results
+    </div>
+    <!-- Pagination (Bottom) -->
+    <div class="flex justify-center md:justify-end">
+      <nav class="inline-flex rounded-md shadow-sm overflow-hidden" aria-label="Pagination">
+        <a href="#" class="px-3 py-2 text-gray-400 bg-white border border-gray-300 hover:bg-gray-100">
+          <span class="sr-only">Previous</span>
+          <svg class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd"
+              d="M11.78 5.22a.75.75 0 0 1 0 1.06L8.06 10l3.72 3.72a.75.75 0 1 1-1.06 1.06l-4.25-4.25a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 0 1 1.06 0Z"
+              clip-rule="evenodd" />
+          </svg>
+        </a>
+        <a href="#" aria-current="page"
+          class="px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-blue-800 to-blue-600">
+          1
+        </a>
+        <a href="#"
+          class="px-4 py-2 text-sm font-semibold text-gray-800 bg-white border border-gray-300 hover:bg-gray-100">
+          2
+        </a>
+        <span class="px-4 py-2 text-sm font-semibold text-gray-500 bg-white border border-gray-300">...</span>
+        <a href="#"
+          class="px-4 py-2 text-sm font-semibold text-gray-800 bg-white border border-gray-300 hover:bg-gray-100 hidden md:inline-block">
+          6
+        </a>
+        <a href="#" class="px-3 py-2 text-gray-400 bg-white border border-gray-300 hover:bg-gray-100">
+          <span class="sr-only">Next</span>
+          <svg class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd"
+              d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z"
+              clip-rule="evenodd" />
+          </svg>
+        </a>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<div [ngClass]="{'slide-down p-4': showFilter, 'slide-up p-0': !showFilter}" *ngIf="true" class="mt-3 bg-white border-t-2 border-blue-900 shadow-xl">
+  <form class="w-full">
+    <div class="flex flex-wrap -mx-2">
+      <!-- All Website Dropdown -->
+      <div class="px-2 w-full md:w-1/4 md:mb-0 mb-2">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Websites</label>
+        <select class="w-full border border-gray-300 bg-gray-100 px-3 py-2 focus:outline-none focus:border-blue-500">
+          <option value="" disabled="">Choose Wesite</option>
+          <option value="ALL" selected="">ALL</option>
+          <option value="FSSAI.ORG">FSSAI.ORG</option>
+          <option value="ISOREGISTRY.ORG">ISOREGISTRY.ORG</option>
+          <option value="UDYAMGOV.COM">UDYAMGOV.COM</option>
+          <option value="UDYAMINDIA.IN">UDYAMINDIA.IN</option>
+          <option value="UDYOGREGISTER.IN">UDYOGREGISTER.IN</option>
+        </select>
+      </div>
+
+      <!-- All State Dropdown -->
+      <div class="px-2 w-full md:w-1/4 md:mb-0 mb-2">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Choose Status</label>
+        <select class="w-full border border-gray-300 bg-gray-100 px-3 py-2 focus:outline-none focus:border-blue-500">
+          <option value="" disabled="">Choose Status</option>
+          <option value="ALL" selected="">ALL</option>
+          <option value="Done">Done</option>
+          <option value="Drop">Drop</option>
+          <option value="Process">Process</option>
+          <option value="Refund">Refund</option>
+        </select>
+      </div>
+
+      <!-- All Amount Dropdown -->
+      <div class="px-2 w-full md:w-1/4 md:mb-0 mb-2">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Choose Stage</label>
+        <select class="w-full border border-gray-300 bg-gray-100 px-3 py-2 focus:outline-none focus:border-blue-500">
+          <option value="" disabled="">Choose Stage</option>
+          <option value="ALL" selected="">ALL</option>
+          <option value="1">Processing</option>
+          <option value="6">Document Validation issue</option>
+          <option value="24">OTP Not given</option>
+          <option value="25">Call Not Receive</option>
+          <option value="26">On Hold</option>
+          <option value="27">Not Want</option>
+        </select>
+      </div>
+
+      <!-- All Sales Dropdown -->
+      <div class="px-2 w-full md:w-1/4 md:mb-0 mb-2">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Choose Stage</label>
+        <select class="w-full border border-gray-300 bg-gray-100 px-3 py-2 focus:outline-none focus:border-blue-500">
+          <option value="" disabled="">Choose Price</option>
+          <option value="ALL" selected="">ALL</option>
+          <option value="0">0</option>
+          <option value="1218">1218</option>
+          <option value="1282">1282</option>
+          <option value="1349">1349</option>
+          <option value="14990">14990</option>
+          <option value="1690">1690</option>
+          <option value="19990">19990</option>
+          <option value="324">324</option>
+          <option value="33990">33990</option>
+          <option value="372">372</option>
+          <option value="450">450</option>
+          <option value="599">599</option>
+          <option value="5999">5999</option>
+          <option value="649">649</option>
+          <option value="944">944</option>
+          <option value="990">990</option>
+          <option value="999">999</option>
+        </select>
+      </div>
+
+      <div class="px-2 w-full md:w-1/4 md:mb-0 mb-2">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Order By</label>
+        <select class="w-full border border-gray-300 bg-gray-100 px-3 py-2 focus:outline-none focus:border-blue-500">
+          <option value="" disabled="">Choose Order BY</option>
+          <option value="ASC">ASC</option>
+          <option value="DESC" selected="">DESC</option>
+        </select>
+      </div>
+
+      <div class="px-2 w-full md:w-1/4 md:mb-0 mb-2">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Page Limit</label>
+        <select class="w-full border border-gray-300 bg-gray-100 px-3 py-2 focus:outline-none focus:border-blue-500">
+          <option value="" disabled="">Choose Limit</option>
+          <option value="30" selected="">30 Default</option>
+          <option value="40">40</option>
+          <option value="100">100</option>
+          <option value="300">300</option>
+          <option value="500">500</option>
+          <option value="ALL">ALL</option>
+        </select>
+      </div>
+
+      <div class="px-2 w-full md:w-1/4 md:mb-0 mb-2">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Choose Assign</label>
+        <select class="w-full border border-gray-300 bg-gray-100 px-3 py-2 focus:outline-none focus:border-blue-500">
+          <option value="" disabled="">Choose Assign</option>
+          <option value="ALL" selected="">ALL</option>
+          <option value="1">Olfant Corporation</option>
+          <option value="11">Sourav Maity</option>
+          <option value="12">Ajit kumar</option>
+          <option value="13">Gourav Viswakarma</option>
+          <option value="15">Aman</option>
+          <option value="18">Papun Ghosh</option>
+          <option value="24">Sales Executive</option>
+          <option value="25">Kolli Srividya</option>
+          <option value="26">Juhi Kumari</option>
+        </select>
+      </div>
+
+      <div class="px-2 w-full md:w-1/4 md:mb-0 mb-2">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Order By Days</label>
+        <select class="w-full border border-gray-300 bg-gray-100 px-3 py-2 focus:outline-none focus:border-blue-500">
+          <option value="" disabled="">Choose Order Days</option>
+          <option value="30" selected="">Today</option>
+          <option value="40">Yesterday</option>
+          <option value="100">7 Days</option>
+        </select>
+      </div>
+
+      <div class="px-2 w-full md:w-1/4 md:mb-0 mb-2">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Choose From Date</label>
+        <input type="date"
+          class="w-full border border-gray-300 bg-gray-100 px-3 py-2 focus:outline-none focus:border-blue-500" />
+      </div>
+
+      <div class="px-2 w-full md:w-1/4 md:mb-0 mb-2">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Choose To Date</label>
+        <input type="date"
+          class="w-full border border-gray-300 bg-gray-100 px-3 py-2 focus:outline-none focus:border-blue-500" />
+      </div>
+
+    </div>
+    <div class="mt-2 w-full md:w-auto">
+      <button type="button" class="bg-gradient-to-l from-[#ec4628] to-[#c51e11] text-white font-medium py-2 px-6">
+        Filter
+      </button> &nbsp; &nbsp;
+      <button type="button" class="bg-gradient-to-l from-[#095d36] to-[#199f57] text-white font-medium py-2 px-6">
+        Export
+      </button>
+    </div>
+  </form>
+</div>
+
+<!-- Main Card -->
+<div
+  class="mt-3 bg-white border-t-2 border-blue-900 shadow-lg overflow-hidden transition-all duration-300 card-hover-effect">
+  <!-- Header Section -->
+  <div class="flex flex-col md:flex-row justify-between border-b border-gray-200">
+    <div class="p-4">
+      <div class="flex items-center">
+        <div class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">ID: 24-2023 | 10:55:51</div>
+      </div>
+      <div class="font-bold text-blue-800 uppercase mt-1 flex items-center">
+        <i class="fas fa-globe text-blue-600 mr-2"></i>
+        EUROTRADEMART.ORG
+      </div>
+      <div class="mt-1">
+        <span
+          class="text-xs bg-green-100 text-green-600 font-semibold px-2 py-1 rounded-full status-badge flex items-center w-fit">
+          <i class="fas fa-circle text-xs mr-1"></i>
+          PENDING
+        </span>
+      </div>
+    </div>
+    <div class="flex items-center p-4 bg-gradient-to-r from-white to-blue-50">
+      <div class="mr-4">
+        <div class="text-sm text-gray-500">Sales: <span
+            class="font-medium text-gray-700 hover:text-blue-600 transition-colors duration-200 cursor-pointer">Godiya
+            Kumari</span></div>
+      </div>
+      <div class="bg-blue-700 text-white font-bold py-2 px-3 rounded-lg shadow-md pulse-animation">
+        <div class="text-xs">MSME</div>
+        <div class="text-lg">629</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content Section -->
+  <div class="flex flex-col md:flex-row">
+    <!-- Left Column -->
+    <div class="w-full md:w-7/12 p-4">
+      <div class="mb-4">
+        <div class="flex justify-between items-center mb-2">
+          <div class="font-semibold text-blue-700">
+            <span>Location: </span>
+            <span class="text-blue-500 underline cursor-pointer hover:text-blue-700 transition-colors duration-200">In
+              Lead</span>
+          </div>
+          <div class="text-sm text-gray-500">
+            <a href="#" class="text-blue-600 hover:text-blue-800 transition-colors duration-200 flex items-center">
+              <i class="fas fa-search mr-1"></i> Search Form
+            </a>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+          <div class="bg-blue-50 p-3 rounded-lg hover:bg-blue-100 transition-colors duration-200">
+            <div class="text-sm text-gray-500 mb-1 flex items-center">
+              <i class="fas fa-user mr-1 text-blue-500"></i> Name:
+            </div>
+            <div class="font-medium">Ravi</div>
+          </div>
+          <div class="bg-blue-50 p-3 rounded-lg hover:bg-blue-100 transition-colors duration-200">
+            <div class="text-sm text-gray-500 mb-1 flex items-center">
+              <i class="fas fa-phone mr-1 text-blue-500"></i> Mobile:
+            </div>
+            <div class="font-medium">
+              <a href="tel:8529365558" class="hover:text-blue-600 transition-colors duration-200">8342465558</a>
+            </div>
+          </div>
+          <div class="bg-blue-50 p-3 rounded-lg hover:bg-blue-100 transition-colors duration-200">
+            <div class="text-sm text-gray-500 mb-1 flex items-center">
+              <i class="fas fa-envelope mr-1 text-blue-500"></i> Email:
+            </div>
+            <div class="font-medium">
+              <a href="mailto:raviravikant43@gmail.com"
+                class="text-blue-600 hover:text-blue-800 transition-colors duration-200">raviravikant43@gmail.com</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-wrap gap-2 mt-8">
+        <button [routerLink]="['/panel/form-view']"
+          class="bg-cyan-500 hover:bg-cyan-600 text-white py-2 px-4 rounded-md flex items-center shadow transition-all duration-200 btn-hover">
+          <i class="fas fa-search mr-2"></i> View Form
+        </button>
+        <button
+          class="bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded-md flex items-center shadow transition-all duration-200 btn-hover">
+          <i class="fas fa-money-bill-wave mr-2"></i> Mark As Paid
+        </button>
+      </div>
+    </div>
+
+    <!-- Right Column -->
+    <div class="w-full md:w-5/12 bg-gray-50">
+      <!-- Remarks Section -->
+      <div class="p-4 bg-blue-50 h-full">
+        <div class="font-semibold text-gray-700 mb-2 flex items-center">
+          <i class="fas fa-comment-alt text-blue-600 mr-2"></i> Remarks:
+        </div>
+        <ul class="list-disc ml-5 text-gray-600">
+          <li class="mb-2">MAY BE PAY</li>
+          <li class="hidden mb-2 remark-item">Follow up in 2 days</li>
+        </ul>
+
+        <!-- Activity Log -->
+        <div class="mt-6">
+          <div class="font-semibold text-gray-700 mb-2 flex items-center">
+            <i class="fas fa-history text-blue-600 mr-2"></i> Activity Log:
+          </div>
+          <div class="space-y-2 mt-2 text-sm text-gray-600">
+            <div class="flex items-start">
+              <div class="min-w-8 mr-2">
+                <i class="fas fa-circle text-blue-400 text-xs"></i>
+              </div>
+              <div>
+                <span class="text-gray-800 font-medium">System</span> created client record
+                <div class="text-xs text-gray-500">Today, 10:55:51</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main Card -->
+<div
+  class="mt-3 bg-white border-t-2 border-blue-900 shadow-lg overflow-hidden transition-all duration-300 card-hover-effect">
+  <!-- Header Section -->
+  <div class="flex flex-col md:flex-row justify-between border-b border-gray-200">
+    <div class="p-4">
+      <div class="flex items-center">
+        <div class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">ID: 24-2023 | 10:55:51</div>
+      </div>
+      <div class="font-bold text-blue-800 uppercase mt-1 flex items-center">
+        <i class="fas fa-globe text-blue-600 mr-2"></i>
+        EUROTRADEMART.ORG
+      </div>
+      <div class="mt-1">
+        <span
+          class="text-xs bg-green-100 text-green-600 font-semibold px-2 py-1 rounded-full status-badge flex items-center w-fit">
+          <i class="fas fa-circle text-xs mr-1"></i>
+          PENDING
+        </span>
+      </div>
+    </div>
+    <div class="flex items-center p-4 bg-gradient-to-r from-white to-blue-50">
+      <div class="mr-4">
+        <div class="text-sm text-gray-500">Sales: <span
+            class="font-medium text-gray-700 hover:text-blue-600 transition-colors duration-200 cursor-pointer">Godiya
+            Kumari</span></div>
+      </div>
+      <div class="bg-blue-700 text-white font-bold py-2 px-3 rounded-lg shadow-md pulse-animation">
+        <div class="text-xs">MSME</div>
+        <div class="text-lg">629</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content Section -->
+  <div class="flex flex-col md:flex-row">
+    <!-- Left Column -->
+    <div class="w-full md:w-7/12 p-4">
+      <div class="mb-4">
+        <div class="flex justify-between items-center mb-2">
+          <div class="font-semibold text-blue-700">
+            <span>Location: </span>
+            <span class="text-blue-500 underline cursor-pointer hover:text-blue-700 transition-colors duration-200">In
+              Lead</span>
+          </div>
+          <div class="text-sm text-gray-500">
+            <a href="#" class="text-blue-600 hover:text-blue-800 transition-colors duration-200 flex items-center">
+              <i class="fas fa-search mr-1"></i> Search Form
+            </a>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+          <div class="bg-blue-50 p-3 rounded-lg hover:bg-blue-100 transition-colors duration-200">
+            <div class="text-sm text-gray-500 mb-1 flex items-center">
+              <i class="fas fa-user mr-1 text-blue-500"></i> Name:
+            </div>
+            <div class="font-medium">Ravi</div>
+          </div>
+          <div class="bg-blue-50 p-3 rounded-lg hover:bg-blue-100 transition-colors duration-200">
+            <div class="text-sm text-gray-500 mb-1 flex items-center">
+              <i class="fas fa-phone mr-1 text-blue-500"></i> Mobile:
+            </div>
+            <div class="font-medium">
+              <a href="tel:8529365558" class="hover:text-blue-600 transition-colors duration-200">8342465558</a>
+            </div>
+          </div>
+          <div class="bg-blue-50 p-3 rounded-lg hover:bg-blue-100 transition-colors duration-200">
+            <div class="text-sm text-gray-500 mb-1 flex items-center">
+              <i class="fas fa-envelope mr-1 text-blue-500"></i> Email:
+            </div>
+            <div class="font-medium">
+              <a href="mailto:raviravikant43@gmail.com"
+                class="text-blue-600 hover:text-blue-800 transition-colors duration-200">raviravikant43@gmail.com</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-wrap gap-2 mt-8">
+        <button [routerLink]="['/panel/form-view']"
+          class="bg-cyan-500 hover:bg-cyan-600 text-white py-2 px-4 rounded-md flex items-center shadow transition-all duration-200 btn-hover">
+          <i class="fas fa-search mr-2"></i> View Form
+        </button>
+        <button
+          class="bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded-md flex items-center shadow transition-all duration-200 btn-hover">
+          <i class="fas fa-money-bill-wave mr-2"></i> Mark As Paid
+        </button>
+      </div>
+    </div>
+
+    <!-- Right Column -->
+    <div class="w-full md:w-5/12 bg-gray-50">
+      <!-- Remarks Section -->
+      <div class="p-4 bg-blue-50 h-full">
+        <div class="font-semibold text-gray-700 mb-2 flex items-center">
+          <i class="fas fa-comment-alt text-blue-600 mr-2"></i> Remarks:
+        </div>
+        <ul class="list-disc ml-5 text-gray-600">
+          <li class="mb-2">MAY BE PAY</li>
+          <li class="hidden mb-2 remark-item">Follow up in 2 days</li>
+        </ul>
+
+        <!-- Activity Log -->
+        <div class="mt-6">
+          <div class="font-semibold text-gray-700 mb-2 flex items-center">
+            <i class="fas fa-history text-blue-600 mr-2"></i> Activity Log:
+          </div>
+          <div class="space-y-2 mt-2 text-sm text-gray-600">
+            <div class="flex items-start">
+              <div class="min-w-8 mr-2">
+                <i class="fas fa-circle text-blue-400 text-xs"></i>
+              </div>
+              <div>
+                <span class="text-gray-800 font-medium">System</span> created client record
+                <div class="text-xs text-gray-500">Today, 10:55:51</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main Card -->
+<div
+  class="mt-3 bg-white border-t-2 border-blue-900 shadow-lg overflow-hidden transition-all duration-300 card-hover-effect">
+  <!-- Header Section -->
+  <div class="flex flex-col md:flex-row justify-between border-b border-gray-200">
+    <div class="p-4">
+      <div class="flex items-center">
+        <div class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">ID: 24-2023 | 10:55:51</div>
+      </div>
+      <div class="font-bold text-blue-800 uppercase mt-1 flex items-center">
+        <i class="fas fa-globe text-blue-600 mr-2"></i>
+        EUROTRADEMART.ORG
+      </div>
+      <div class="mt-1">
+        <span
+          class="text-xs bg-green-100 text-green-600 font-semibold px-2 py-1 rounded-full status-badge flex items-center w-fit">
+          <i class="fas fa-circle text-xs mr-1"></i>
+          PENDING
+        </span>
+      </div>
+    </div>
+    <div class="flex items-center p-4 bg-gradient-to-r from-white to-blue-50">
+      <div class="mr-4">
+        <div class="text-sm text-gray-500">Sales: <span
+            class="font-medium text-gray-700 hover:text-blue-600 transition-colors duration-200 cursor-pointer">Godiya
+            Kumari</span></div>
+      </div>
+      <div class="bg-blue-700 text-white font-bold py-2 px-3 rounded-lg shadow-md pulse-animation">
+        <div class="text-xs">MSME</div>
+        <div class="text-lg">629</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content Section -->
+  <div class="flex flex-col md:flex-row">
+    <!-- Left Column -->
+    <div class="w-full md:w-7/12 p-4">
+      <div class="mb-4">
+        <div class="flex justify-between items-center mb-2">
+          <div class="font-semibold text-blue-700">
+            <span>Location: </span>
+            <span class="text-blue-500 underline cursor-pointer hover:text-blue-700 transition-colors duration-200">In
+              Lead</span>
+          </div>
+          <div class="text-sm text-gray-500">
+            <a href="#" class="text-blue-600 hover:text-blue-800 transition-colors duration-200 flex items-center">
+              <i class="fas fa-search mr-1"></i> Search Form
+            </a>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+          <div class="bg-blue-50 p-3 rounded-lg hover:bg-blue-100 transition-colors duration-200">
+            <div class="text-sm text-gray-500 mb-1 flex items-center">
+              <i class="fas fa-user mr-1 text-blue-500"></i> Name:
+            </div>
+            <div class="font-medium">Ravi</div>
+          </div>
+          <div class="bg-blue-50 p-3 rounded-lg hover:bg-blue-100 transition-colors duration-200">
+            <div class="text-sm text-gray-500 mb-1 flex items-center">
+              <i class="fas fa-phone mr-1 text-blue-500"></i> Mobile:
+            </div>
+            <div class="font-medium">
+              <a href="tel:8529365558" class="hover:text-blue-600 transition-colors duration-200">8342465558</a>
+            </div>
+          </div>
+          <div class="bg-blue-50 p-3 rounded-lg hover:bg-blue-100 transition-colors duration-200">
+            <div class="text-sm text-gray-500 mb-1 flex items-center">
+              <i class="fas fa-envelope mr-1 text-blue-500"></i> Email:
+            </div>
+            <div class="font-medium">
+              <a href="mailto:raviravikant43@gmail.com"
+                class="text-blue-600 hover:text-blue-800 transition-colors duration-200">raviravikant43@gmail.com</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-wrap gap-2 mt-8">
+        <button [routerLink]="['/panel/form-view']"
+          class="bg-cyan-500 hover:bg-cyan-600 text-white py-2 px-4 rounded-md flex items-center shadow transition-all duration-200 btn-hover">
+          <i class="fas fa-search mr-2"></i> View Form
+        </button>
+        <button
+          class="bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded-md flex items-center shadow transition-all duration-200 btn-hover">
+          <i class="fas fa-money-bill-wave mr-2"></i> Mark As Paid
+        </button>
+      </div>
+    </div>
+
+    <!-- Right Column -->
+    <div class="w-full md:w-5/12 bg-gray-50">
+      <!-- Remarks Section -->
+      <div class="p-4 bg-blue-50 h-full">
+        <div class="font-semibold text-gray-700 mb-2 flex items-center">
+          <i class="fas fa-comment-alt text-blue-600 mr-2"></i> Remarks:
+        </div>
+        <ul class="list-disc ml-5 text-gray-600">
+          <li class="mb-2">MAY BE PAY</li>
+          <li class="hidden mb-2 remark-item">Follow up in 2 days</li>
+        </ul>
+
+        <!-- Activity Log -->
+        <div class="mt-6">
+          <div class="font-semibold text-gray-700 mb-2 flex items-center">
+            <i class="fas fa-history text-blue-600 mr-2"></i> Activity Log:
+          </div>
+          <div class="space-y-2 mt-2 text-sm text-gray-600">
+            <div class="flex items-start">
+              <div class="min-w-8 mr-2">
+                <i class="fas fa-circle text-blue-400 text-xs"></i>
+              </div>
+              <div>
+                <span class="text-gray-800 font-medium">System</span> created client record
+                <div class="text-xs text-gray-500">Today, 10:55:51</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

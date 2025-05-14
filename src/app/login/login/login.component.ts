@@ -55,4 +55,8 @@ export class LoginComponent implements OnInit {
       }
   }
 
+  loginWithMicrosoft() {
+    console.log('Working');
+  }
+
 }

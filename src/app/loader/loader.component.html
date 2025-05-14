@@ -1,9 +1,13 @@
-<div *ngIf="toggleLoader">
-    
-    <div class="loading">
-        <div class="spinner-border" role="status">
-            <span class="sr-only">Loading...</span>
-        </div>
+<div class="demo-container">
+    <!-- Loader with Microsoft-style animation -->
+    <div *ngIf="toggleLoader" class="ms-loader-container">
+      <div class="ms-loader-overlay"></div>
+      <div class="ms-loader">
+        <div class="ms-loader-box box1"></div>
+        <div class="ms-loader-box box2"></div>
+        <div class="ms-loader-box box3"></div>
+        <div class="ms-loader-box box4"></div>
+        <span class="sr-only">Loading...</span>
+      </div>
     </div>
-
-</div>
+  </div>

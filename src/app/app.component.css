@@ -14,3 +14,25 @@ background: #eee;
         --cui-sidebar-occupy-end: 0;
     }
 }
+
+html, body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden; /* Prevent body scroll */
+  }
+  
+  .main-wrapper {
+    height: 100vh;
+    overflow-y: auto;
+  }
+  
+  /* Hide scrollbar */
+  .hide-scrollbar {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE 10+ */
+  }
+  
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none; /* Chrome, Safari */
+  }
+  

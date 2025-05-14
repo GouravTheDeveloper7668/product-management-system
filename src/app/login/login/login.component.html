@@ -1,22 +1,208 @@
+<div class="relative h-screen w-full overflow-hidden bg-[#123]">
+  <!-- Background Animation -->
+  <div class="absolute inset-0">
+    <div class="animate-blob1"></div>
+    <div class="animate-blob2"></div>
+    <div class="animate-blob3"></div>
+    <div class="animate-blob4"></div>
+  </div>
 
-<div class="container" style="height: 100vh;">
-    <div class="align-items-center d-flex h-100 justify-content-center w-100">
-      <form class="w-50" [formGroup]="loginForm"  (ngSubmit)="login()">
-        <h1>Login</h1>
-        <h6 class="text-danger" *ngIf="FormErrMessage && FormErrMessage.message">{{FormErrMessage.message}}</h6>
-        <h6 class="text-danger" *ngIf="loginForm.invalid && (loginForm.dirty || loginForm.touched)">Please enter email and password</h6>
-        <h6 class="text-danger" *ngIf="FormErr">Login Failed</h6>
-        <div class="form-group">
-          <label for="exampleInputEmail1">Email address</label>
-          <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"  formControlName="email" required placeholder="Enter email">
-          <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+  <!-- Content Container -->
+  <div class="relative z-10 flex h-full items-center justify-center px-4">
+    <div
+      class="max-w-md w-full rounded-lg bg-white bg-opacity-90 p-8 shadow-lg"
+    >
+      <h1 class="mb-6 text-3xl font-bold text-center text-[#002244]">Welcome to Our CRM</h1>
+      
+      <!-- Login Form -->
+      <form class="space-y-4" [formGroup]="loginForm" (ngSubmit)="login()">
+        <!-- Error Messages -->
+        <div *ngIf="FormErrMessage && FormErrMessage.message" class="text-red-500 text-sm font-medium text-center">
+          {{FormErrMessage.message}}
         </div>
-        <div class="form-group">
-          <label for="exampleInputPassword1">Password</label>
-          <input type="password" class="form-control" id="exampleInputPassword1"  formControlName="password" required placeholder="Password">
+        <div *ngIf="loginForm.invalid && (loginForm.dirty || loginForm.touched)" class="text-red-500 text-sm font-medium text-center">
+          Please enter email and password
         </div>
-        <a class="d-block mt-2" [routerLink]="['../register']" >Click Here to Register</a>
-        <button type="submit" [disabled]="loginForm.invalid && (loginForm.dirty || loginForm.touched)" class="btn mt-2 btn-primary">{{LoginFormBtnStr }}</button>
+        <div *ngIf="FormErr" class="text-red-500 text-sm font-medium text-center">
+          Login Failed
+        </div>
+        
+        <!-- Email Field -->
+        <div class="space-y-1">
+          <label for="exampleInputEmail1" class="block text-sm font-medium text-[#002244]">
+            Email address
+          </label>
+          <input 
+            type="email" 
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#002244]" 
+            id="exampleInputEmail1" 
+            aria-describedby="emailHelp" 
+            formControlName="email" 
+            required 
+            placeholder="Enter email"
+          >
+          <small id="emailHelp" class="block text-xs text-gray-500">
+            We'll never share your email with anyone else.
+          </small>
+        </div>
+        
+        <!-- Password Field -->
+        <div class="space-y-1">
+          <label for="exampleInputPassword1" class="block text-sm font-medium text-[#002244]">
+            Password
+          </label>
+          <input 
+            type="password" 
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#002244]" 
+            id="exampleInputPassword1" 
+            formControlName="password" 
+            required 
+            placeholder="Password"
+          >
+        </div>
+        
+        <!-- Register Link -->
+        <a class="block text-sm text-[#002244] hover:underline" [routerLink]="['../register']">
+          Click Here to Register
+        </a>
+        
+        <!-- Submit Button -->
+        <div>
+          <button 
+            type="submit" 
+            [disabled]="loginForm.invalid && (loginForm.dirty || loginForm.touched)" 
+            class="w-full py-2 px-4 bg-[#002244] text-white rounded-md hover:bg-[#001529] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {{LoginFormBtnStr}}
+          </button>
+        </div>
       </form>
+      
+      <!-- Divider -->
+      <div class="flex items-center my-4">
+        <div class="flex-grow border-t border-gray-300"></div>
+        <span class="px-4 text-gray-500 text-sm">OR</span>
+        <div class="flex-grow border-t border-gray-300"></div>
+      </div>
+      
+      <!-- Microsoft Login Button -->
+      <button
+        (click)="loginWithMicrosoft()"
+        class="flex items-center justify-center gap-2 w-full rounded-md bg-white border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 23 23"
+        >
+          <path fill="#f25022" d="M1 1h10v10H1z" />
+          <path fill="#00a4ef" d="M1 12h10v10H1z" />
+          <path fill="#7fba00" d="M12 1h10v10H12z" />
+          <path fill="#ffb900" d="M12 12h10v10H12z" />
+        </svg>
+        Login With Microsoft
+      </button>
     </div>
+  </div>
 </div>
+
+<style>
+  .animate-blob1,
+  .animate-blob2,
+  .animate-blob3,
+  .animate-blob4 {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 3em;
+    height: 3em;
+    content: ".";
+    mix-blend-mode: screen;
+    border-radius: 50%;
+  }
+
+  .animate-blob1 {
+    box-shadow: 0.29em 0.88em 7px rgba(255, 0, 93, 0.9),
+      -0.18em 0.91em 7px rgba(0, 249, 255, 0.9),
+      0.22em -0.31em 7px rgba(171, 255, 0, 0.9),
+      1.05em 0.91em 7px rgba(255, 10, 0, 0.9),
+      0.38em -0.43em 7px rgba(0, 112, 255, 0.9),
+      2.06em 0.05em 7px rgba(0, 255, 46, 0.9),
+      1.31em 1.18em 7px rgba(255, 0, 120, 0.9),
+      0.49em 1.35em 7px rgba(0, 255, 168, 0.9);
+    animation: move1 44s -27s infinite ease-in-out alternate;
+  }
+
+  .animate-blob2 {
+    box-shadow: 1.94em 0.6em 7px rgba(79, 255, 0, 0.9),
+      0.44em 0.18em 7px rgba(0, 155, 255, 0.9),
+      0.37em 2.25em 7px rgba(14, 0, 255, 0.9),
+      0.3em 1.38em 7px rgba(0, 208, 255, 0.9),
+      0.38em 1.67em 7px rgba(0, 255, 185, 0.9),
+      -0.31em 1.99em 7px rgba(0, 52, 255, 0.9),
+      1.11em -0.3em 7px rgba(0, 255, 221, 0.9),
+      -0.24em 0.44em 7px rgba(255, 230, 0, 0.9);
+    animation: move2 43s -32s infinite ease-in-out alternate;
+  }
+
+  .animate-blob3 {
+    box-shadow: 1.44em 2.48em 7px rgba(255, 0, 202, 0.9),
+      2.16em 1.9em 7px rgba(0, 255, 138, 0.9),
+      -0.49em -0.28em 7px rgba(170, 255, 0, 0.9),
+      1.5em 2.33em 7px rgba(0, 203, 255, 0.9),
+      1.26em -0.27em 7px rgba(0, 255, 104, 0.9),
+      0.81em 2.23em 7px rgba(255, 202, 0, 0.9),
+      0.63em 1.98em 7px rgba(255, 204, 0, 0.9),
+      1.39em 2.05em 7px rgba(75, 0, 255, 0.9);
+    animation: move3 42s -23s infinite ease-in-out alternate;
+  }
+
+  .animate-blob4 {
+    box-shadow: -0.3em -0.31em 7px rgba(0, 60, 255, 0.9),
+      1.3em 1.1em 7px rgba(85, 0, 255, 0.9),
+      2.19em 1.5em 7px rgba(0, 107, 255, 0.9),
+      -0em 1.6em 7px rgba(199, 0, 255, 0.9),
+      1.22em 1.51em 7px rgba(255, 51, 0, 0.9),
+      0.37em 0.51em 7px rgba(0, 255, 61, 0.9),
+      0.74em 2.25em 7px rgba(0, 5, 255, 0.9),
+      2.11em 0.42em 7px rgba(0, 203, 255, 0.9);
+    animation: move4 41s -19s infinite ease-in-out alternate;
+  }
+
+  @keyframes move1 {
+    from {
+      transform: rotate(0deg) scale(12) translateX(-20px);
+    }
+    to {
+      transform: rotate(360deg) scale(18) translateX(20px);
+    }
+  }
+
+  @keyframes move2 {
+    from {
+      transform: rotate(30deg) scale(13) translateX(-25px);
+    }
+    to {
+      transform: rotate(390deg) scale(17) translateX(15px);
+    }
+  }
+
+  @keyframes move3 {
+    from {
+      transform: rotate(60deg) scale(11) translateX(-15px);
+    }
+    to {
+      transform: rotate(420deg) scale(19) translateX(25px);
+    }
+  }
+
+  @keyframes move4 {
+    from {
+      transform: rotate(90deg) scale(14) translateX(-30px);
+    }
+    to {
+      transform: rotate(450deg) scale(16) translateX(10px);
+    }
+  }
+</style>

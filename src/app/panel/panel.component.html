@@ -1,10 +1,17 @@
-<app-sidebar></app-sidebar>
-<div class="wrapper d-flex flex-column min-vh-100 bg-light bg-opacity-50 dark:bg-transparent" style="padding-left:11rem;">
-    <app-navbar></app-navbar> 
-    <div class="body flex-grow-1 px-3">
-        <div class="container">
-            <router-outlet></router-outlet>
-        </div>
-    </div>   
+<div class="flex h-screen bg-gray-100">
+  <!-- Sidebar -->
+  <app-sidebar [isOpen]="sidebarOpen" [activeRoute]="currentRoute"></app-sidebar>
+  
+  <div class="flex flex-col flex-1 overflow-hidden">
+    <!-- Navbar -->
+    <app-navbar (toggleSidebar)="toggleSidebar()"></app-navbar>
+    
+    <!-- Main Content -->
+    <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-4">
+      <router-outlet></router-outlet>
+    </main>
+    
+    <!-- Footer -->
+    <app-footer></app-footer>
+  </div>
 </div>
-<app-footer></app-footer>

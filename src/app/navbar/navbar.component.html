@@ -1,38 +1,45 @@
-<header class="header header-light bg-primary header-sticky mb-4">
-    <div class="container-fluid">
-
-
-        <ul class="header-nav ms-auto me-3">
-            <li class="nav-item dropdown d-md-down-none">
-                <div class="nav-link show cursor-pointer" data-coreui-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="true">
-                    <span class="position-relative">
-                        <!-- <i class="fa fa-bell fa-2x"></i> -->
-                    </span>
-                </div>
-             </li>
-         <li class="nav-item dropdown d-md-down-none">
-                <div class="show cursor-pointer" datacoreui-toggle="dropdown" (click)="onTogglrProfileBar()" role="button" aria-haspopup="true" aria-expanded="true">
-                    <span class="avatar avatar-md">
-                        <img class="avatar-img" src="https://coreui.io/demos/bootstrap/4.3/light-v3/assets/img/avatars/8.jpg" alt="user@email.com">
-                    </span>
-                </div>
-                <div *ngIf="isProfilebarOptionToggle" class="dropdown-menu dropdown-menu-end pt-0 show" data-popper-placement="bottom-end" style="position: absolute; inset: 0px 0px auto auto; margin: 0px; transform: translate(0px, 42px);">
-                    <div class="dropdown-header bg-light py-2 dark:bg-white dark:bg-opacity-10">
-                        <div class="fw-semibold">Account</div>
-                    </div>
-                    <a [routerLink]="['profile']" class="dropdown-item cursor-pointer">
-                        <i class="fa fa-child"></i>
-                        Profile
-                    </a>
-                    <div (click)="onLogOut()" class="dropdown-item cursor-pointer">
-                        <i class="fa fa-bell"></i>
-                        Logout
-                    </div>
-                </div>
-             </li>
-        
-        </ul>
-        
+<nav class="bg-white border-b border-gray-200 px-4 py-2.5 flex justify-between items-center">
+    <div class="flex items-center">
+      <button (click)="onToggleSidebar()" class="text-navy-blue hover:text-navy-blue-dark focus:outline-none">
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="ml-4">
+        <h2 class="text-lg font-medium text-gray-800">{{ pageTitle }}</h2>
+      </div>
+    </div>
+    
+    <div class="flex items-center space-x-4">
+      <!-- Search Bar -->
+      <!-- <div class="hidden md:flex relative">
+        <input type="text" placeholder="Search..." 
+               class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full pl-10 p-2">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <i class="fas fa-search text-gray-400"></i>
         </div>
-</header>
-<app-toast-inline aria-live="polite" aria-atomic="true"></app-toast-inline>
+      </div> -->
+      
+      <!-- Notifications -->
+      <!-- <button class="relative p-1 text-gray-600 hover:bg-gray-100 rounded-full focus:outline-none">
+        <i class="fas fa-bell"></i>
+        <span class="absolute top-0 right-0 h-2 w-2 bg-orange-500 rounded-full"></span>
+      </button> -->
+      
+      <!-- User Menu -->
+      <div class="relative">
+        <button (click)="toggleUserMenu()" class="flex items-center text-sm font-medium text-gray-700 focus:outline-none">
+          <img class="h-8 w-8 rounded-full" src="https://branition.com/assets/img/users/logos/7234-0qmSFtR.webp" alt="User Profile">
+          <span class="ml-2 hidden md:block">John Doe</span>
+          <i class="fas fa-chevron-down ml-1"></i>
+        </button>
+        
+        <!-- User Dropdown -->
+        <div *ngIf="isUserMenuOpen" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
+          <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+          <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
+          <button (click)="onLogOut()" type="button" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+            Sign out
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>

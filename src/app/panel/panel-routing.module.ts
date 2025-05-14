@@ -13,6 +13,10 @@ const routes: Routes = [
       loadChildren: () => import('../profile/profile.module').then(m => m.ProfileModule)
     },
     {
+      path: 'form-view',
+      loadChildren: () => import('../form-view/form-view.module').then(m => m.FormViewModule)
+    },
+    {
       path: 'department',
       loadChildren: () => import('../department/department.module').then(m => m.DepartmentModule)
     },
