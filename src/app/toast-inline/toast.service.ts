@@ -8,7 +8,7 @@ export class ToastService {
     this.toasts.push({ textOrTpl, ...options });
   }
 
-  remove(toast:any) {
+  remove(toast: any) {
     this.toasts = this.toasts.filter(t => t !== toast);
   }
 
@@ -17,13 +17,14 @@ export class ToastService {
   }
 
 
-  showSuccess(message:string) {
-    this.show(message, { classname: 'bg-success text-light', delay: 3000 });
+  showSuccess(message: string) {
+    this.show(message, { classname: 'bg-white border-start border-4 border-success text-success', delay: 3000 });
   }
 
-  showDanger(dangerTpl:string) {
-    this.show(dangerTpl, { classname: 'bg-danger text-light', delay: 3500 });
+  showDanger(message: string) {
+    this.show(message, { classname: 'bg-white border-start border-4 border-danger text-danger', delay: 3000 });
   }
+
 
   ngOnDestroy(): void {
     this.clear();

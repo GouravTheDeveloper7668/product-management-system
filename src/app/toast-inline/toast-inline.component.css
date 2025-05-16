@@ -1,3 +1,16 @@
 .toaster-top {
-    margin-top: 50px;
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1200;
+}
+
+.bg-success {
+  background-color: #d4edda;
+  border-left: 6px solid #28a745;
+}
+
+.bg-danger {
+  background-color: #f8d7da;
+  border-left: 6px solid #dc3545;
 }

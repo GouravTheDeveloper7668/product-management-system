@@ -1,4 +1,4 @@
-<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-2 mb-4">
+<div class="grid  gap-2 mb-4" [ngClass]="getTailwindGridClass(statusCards.length)">
   <div *ngFor="let card of statusCards"
     class="status-card bg-white shadow p-2 cursor-pointer transition-all duration-200" [ngClass]="{'hover-total': card.id === 'total', 
                   'hover-followups': card.id === 'followups',
@@ -6,7 +6,8 @@
                   'hover-processing': card.id === 'processing',
                   'hover-delivered': card.id === 'delivered', 
                   'hover-dropped': card.id === 'dropped',
-                  'hover-refunded': card.id === 'refunded'}" (click)="onCardClick(card)">
+                  'hover-refunded': card.id === 'refunded'}"
+    (click)="onCardClick(card.parameters.web, card.parameters.status, card.parameters.form_track, card.id)">
     <div class="flex items-center">
       <div class="p-2 text-white flex items-center justify-center" [ngClass]="getIconClass(card.id)">
         <i class="fas fa-{{card.icon}} text-lg"></i>
@@ -20,30 +21,43 @@
   </div>
 </div>
 
+<!-- Category Tabs -->
+<div class="bg-white shadow mb-4  overflow-x-auto">
+  <div class="flex flex-wrap gap-2 p-2">
+    <button *ngFor="let category of categories" (click)="selectCategory(category)"
+      class="text-sm px-3 py-1.5 transition-all duration-200 font-medium" [ngClass]="{
+        'bg-gradient-to-r from-blue-600 to-blue-900 text-white shadow-sm': selectedCategory === category,
+        'bg-gray-200 text-gray-700 hover:bg-gray-300': selectedCategory !== category
+      }">
+      {{ category }}
+    </button>
+  </div>
+</div>
+
+
 <div class="bg-white border-t-2 border-blue-900 shadow-xl p-4">
   <!-- Responsive flex layout -->
   <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
 
     <!-- Search (Left Side) -->
     <div class="flex w-full md:w-2/4 items-center space-x-2">
-      <input type="text" placeholder="Search anything..."
-        class="w-full px-4 py-2 bg-gray-200 focus:outline-none" />
-    
+      <input type="text" placeholder="Search anything..." class="w-full px-4 py-2 bg-gray-200 focus:outline-none" />
+
       <button class="px-3 py-2 bg-blue-900 text-white hover:bg-orange-500 transition-colors duration-200">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="11" cy="11" r="8"></circle>
           <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
         </svg>
       </button>
-          
+
       <button class="px-3 py-2 bg-blue-900 text-white hover:bg-orange-500 transition-colors duration-200"
         (click)="toggleFilter()">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-        stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round"
-          d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L15 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 019 21v-7.586L3.293 6.707A1 1 0 013 6V4z" />
-      </svg>
+          stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L15 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 019 21v-7.586L3.293 6.707A1 1 0 013 6V4z" />
+        </svg>
       </button>
     </div>
 
@@ -89,7 +103,8 @@
   </div>
 </div>
 
-<div [ngClass]="{'slide-down p-4': showFilter, 'slide-up p-0': !showFilter}" *ngIf="true" class="mt-3 bg-white border-t-2 border-blue-900 shadow-xl">
+<div [ngClass]="{'slide-down p-4': showFilter, 'slide-up p-0': !showFilter}" *ngIf="true"
+  class="mt-3 bg-white border-t-2 border-blue-900 shadow-xl">
   <form class="w-full">
     <div class="flex flex-wrap -mx-2">
       <!-- All Website Dropdown -->
@@ -233,123 +248,122 @@
   </form>
 </div>
 
-<!-- Main Card -->
-<div
-  class="mt-3 bg-white border-t-2 border-blue-900 shadow-lg overflow-hidden transition-all duration-300 card-hover-effect">
-  <!-- Header Section -->
-  <div class="flex flex-col md:flex-row justify-between border-b border-gray-200">
-    <div class="p-4">
-      <div class="flex items-center">
-        <div class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">ID: 24-2023 | 10:55:51</div>
-      </div>
-      <div class="font-bold text-blue-800 uppercase mt-1 flex items-center">
-        <i class="fas fa-globe text-blue-600 mr-2"></i>
-        EUROTRADEMART.ORG
-      </div>
-      <div class="mt-1">
-        <span
-          class="text-xs bg-green-100 text-green-600 font-semibold px-2 py-1 rounded-full status-badge flex items-center w-fit">
-          <i class="fas fa-circle text-xs mr-1"></i>
-          PENDING
-        </span>
-      </div>
-    </div>
-    <div class="flex items-center p-4 bg-gradient-to-r from-white to-blue-50">
-      <div class="mr-4">
-        <div class="text-sm text-gray-500">Sales: <span
-            class="font-medium text-gray-700 hover:text-blue-600 transition-colors duration-200 cursor-pointer">Godiya
-            Kumari</span></div>
-      </div>
-      <div class="bg-blue-700 text-white font-bold py-2 px-3 rounded-lg shadow-md pulse-animation">
-        <div class="text-xs">MSME</div>
-        <div class="text-lg">629</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Content Section -->
-  <div class="flex flex-col md:flex-row">
-    <!-- Left Column -->
-    <div class="w-full md:w-7/12 p-4">
-      <div class="mb-4">
-        <div class="flex justify-between items-center mb-2">
-          <div class="font-semibold text-blue-700">
-            <span>Location: </span>
-            <span class="text-blue-500 underline cursor-pointer hover:text-blue-700 transition-colors duration-200">In
-              Lead</span>
-          </div>
-          <div class="text-sm text-gray-500">
-            <a href="#" class="text-blue-600 hover:text-blue-800 transition-colors duration-200 flex items-center">
-              <i class="fas fa-search mr-1"></i> Search Form
-            </a>
-          </div>
+<div *ngIf="tableData.length > 0; else noData">
+  <div *ngFor="let card of tableData" class="mt-3 bg-white border-t-2 border-blue-900 shadow-lg overflow-hidden transition-all duration-300 card-hover-effect">
+    <!-- Replace hardcoded values with dynamic bindings -->
+    <div class="flex flex-col md:flex-row justify-between border-b border-gray-200">
+      <div class="p-4">
+        <div class="flex items-center">
+          <div class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">Date: {{ card.date }}</div>
         </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-          <div class="bg-blue-50 p-3 rounded-lg hover:bg-blue-100 transition-colors duration-200">
-            <div class="text-sm text-gray-500 mb-1 flex items-center">
-              <i class="fas fa-user mr-1 text-blue-500"></i> Name:
-            </div>
-            <div class="font-medium">Ravi</div>
-          </div>
-          <div class="bg-blue-50 p-3 rounded-lg hover:bg-blue-100 transition-colors duration-200">
-            <div class="text-sm text-gray-500 mb-1 flex items-center">
-              <i class="fas fa-phone mr-1 text-blue-500"></i> Mobile:
-            </div>
-            <div class="font-medium">
-              <a href="tel:8529365558" class="hover:text-blue-600 transition-colors duration-200">8342465558</a>
-            </div>
-          </div>
-          <div class="bg-blue-50 p-3 rounded-lg hover:bg-blue-100 transition-colors duration-200">
-            <div class="text-sm text-gray-500 mb-1 flex items-center">
-              <i class="fas fa-envelope mr-1 text-blue-500"></i> Email:
-            </div>
-            <div class="font-medium">
-              <a href="mailto:raviravikant43@gmail.com"
-                class="text-blue-600 hover:text-blue-800 transition-colors duration-200">raviravikant43@gmail.com</a>
-            </div>
-          </div>
+        <div class="font-bold text-blue-800 uppercase mt-1 flex items-center">
+          <i class="fas fa-globe text-blue-600 mr-2"></i>
+          {{ card.website }}
+        </div>
+        <div class="mt-1">
+          <span class="text-xs bg-green-100 text-green-600 font-semibold px-2 py-1 rounded-full status-badge flex items-center w-fit">
+            <i class="fas fa-circle text-xs mr-1"></i>
+            {{ card.status }}
+          </span>
         </div>
       </div>
-
-      <!-- Action Buttons -->
-      <div class="flex flex-wrap gap-2 mt-8">
-        <button [routerLink]="['/panel/form-view']"
-          class="bg-cyan-500 hover:bg-cyan-600 text-white py-2 px-4 rounded-md flex items-center shadow transition-all duration-200 btn-hover">
-          <i class="fas fa-search mr-2"></i> View Form
-        </button>
-        <button
-          class="bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded-md flex items-center shadow transition-all duration-200 btn-hover">
-          <i class="fas fa-money-bill-wave mr-2"></i> Mark As Paid
-        </button>
+      <div class="flex items-center p-4 bg-gradient-to-r from-white to-blue-50">
+        <div class="mr-4">
+          <div class="text-sm text-gray-500">Sales:
+            <span class="font-medium text-gray-700 hover:text-blue-600 transition-colors duration-200 cursor-pointer">
+              {{ card.sales }}
+            </span>
+          </div>
+        </div>
+        <div class="bg-blue-700 text-white font-bold py-2 px-3 rounded-lg shadow-md pulse-animation">
+          <div class="text-xs">{{ card.type }}</div>
+          <div class="text-lg">{{ card.price }}</div>
+        </div>
       </div>
     </div>
 
-    <!-- Right Column -->
-    <div class="w-full md:w-5/12 bg-gray-50">
-      <!-- Remarks Section -->
-      <div class="p-4 bg-blue-50 h-full">
-        <div class="font-semibold text-gray-700 mb-2 flex items-center">
-          <i class="fas fa-comment-alt text-blue-600 mr-2"></i> Remarks:
-        </div>
-        <ul class="list-disc ml-5 text-gray-600">
-          <li class="mb-2">MAY BE PAY</li>
-          <li class="hidden mb-2 remark-item">Follow up in 2 days</li>
-        </ul>
+    <!-- Content Section -->
+    <div class="flex flex-col md:flex-row">
+      <!-- Left Column -->
+      <div class="w-full md:w-7/12 p-4">
+        <div class="mb-4">
+          <div class="flex justify-between items-center mb-2">
+            <div class="font-semibold text-blue-700">
+              <span>Location: </span>
+              <span class="text-blue-500 underline cursor-pointer hover:text-blue-700 transition-colors duration-200">{{ card.stage }}</span>
+            </div>
+            <div class="text-sm text-gray-500">
+              <a href="#" class="text-blue-600 hover:text-blue-800 transition-colors duration-200 flex items-center">
+                <i class="fas fa-search mr-1"></i> Search Form
+              </a>
+            </div>
+          </div>
 
-        <!-- Activity Log -->
-        <div class="mt-6">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+            <div class="bg-blue-50 p-3 rounded-lg hover:bg-blue-100 transition-colors duration-200">
+              <div class="text-sm text-gray-500 mb-1 flex items-center">
+                <i class="fas fa-user mr-1 text-blue-500"></i> Name:
+              </div>
+              <div class="font-medium">{{ card.applicantName }}</div>
+            </div>
+            <div class="bg-blue-50 p-3 rounded-lg hover:bg-blue-100 transition-colors duration-200">
+              <div class="text-sm text-gray-500 mb-1 flex items-center">
+                <i class="fas fa-phone mr-1 text-blue-500"></i> Mobile:
+              </div>
+              <div class="font-medium">
+                <a [href]="'tel:' + card.number" class="hover:text-blue-600 transition-colors duration-200">
+                  {{ card.number }}
+                </a>
+              </div>
+            </div>
+            <div class="bg-blue-50 p-3 rounded-lg hover:bg-blue-100 transition-colors duration-200">
+              <div class="text-sm text-gray-500 mb-1 flex items-center">
+                <i class="fas fa-envelope mr-1 text-blue-500"></i> Email:
+              </div>
+              <div class="font-medium">
+                <a [href]="'mailto:' + card.email" class="text-blue-600 hover:text-blue-800 transition-colors duration-200">
+                  {{ card.email }}
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-wrap gap-2 mt-8">
+          <button [routerLink]="['/panel/form-view']"
+            class="bg-cyan-500 hover:bg-cyan-600 text-white py-2 px-4 rounded-md flex items-center shadow transition-all duration-200 btn-hover">
+            <i class="fas fa-search mr-2"></i> View Form
+          </button>
+          <button
+            class="bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded-md flex items-center shadow transition-all duration-200 btn-hover">
+            <i class="fas fa-money-bill-wave mr-2"></i> Mark As Paid
+          </button>
+        </div>
+      </div>
+
+      <!-- Right Column -->
+      <div class="w-full md:w-5/12 bg-gray-50">
+        <div class="p-4 bg-blue-50 h-full">
           <div class="font-semibold text-gray-700 mb-2 flex items-center">
-            <i class="fas fa-history text-blue-600 mr-2"></i> Activity Log:
+            <i class="fas fa-comment-alt text-blue-600 mr-2"></i> Remarks:
           </div>
-          <div class="space-y-2 mt-2 text-sm text-gray-600">
-            <div class="flex items-start">
-              <div class="min-w-8 mr-2">
-                <i class="fas fa-circle text-blue-400 text-xs"></i>
-              </div>
-              <div>
-                <span class="text-gray-800 font-medium">System</span> created client record
-                <div class="text-xs text-gray-500">Today, 10:55:51</div>
+          <ul class="list-disc ml-5 text-gray-600">
+            <li class="mb-2">{{ card.remark || 'No Remark' }}</li>
+          </ul>
+          <div class="mt-6">
+            <div class="font-semibold text-gray-700 mb-2 flex items-center">
+              <i class="fas fa-history text-blue-600 mr-2"></i> Activity Log:
+            </div>
+            <div class="space-y-2 mt-2 text-sm text-gray-600">
+              <div class="flex items-start">
+                <div class="min-w-8 mr-2">
+                  <i class="fas fa-circle text-blue-400 text-xs"></i>
+                </div>
+                <div>
+                  <span class="text-gray-800 font-medium">System</span> created client record
+                  <div class="text-xs text-gray-500">{{ card.date }}</div>
+                </div>
               </div>
             </div>
           </div>
@@ -357,256 +371,12 @@
       </div>
     </div>
   </div>
+
 </div>
 
-<!-- Main Card -->
-<div
-  class="mt-3 bg-white border-t-2 border-blue-900 shadow-lg overflow-hidden transition-all duration-300 card-hover-effect">
-  <!-- Header Section -->
-  <div class="flex flex-col md:flex-row justify-between border-b border-gray-200">
-    <div class="p-4">
-      <div class="flex items-center">
-        <div class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">ID: 24-2023 | 10:55:51</div>
-      </div>
-      <div class="font-bold text-blue-800 uppercase mt-1 flex items-center">
-        <i class="fas fa-globe text-blue-600 mr-2"></i>
-        EUROTRADEMART.ORG
-      </div>
-      <div class="mt-1">
-        <span
-          class="text-xs bg-green-100 text-green-600 font-semibold px-2 py-1 rounded-full status-badge flex items-center w-fit">
-          <i class="fas fa-circle text-xs mr-1"></i>
-          PENDING
-        </span>
-      </div>
-    </div>
-    <div class="flex items-center p-4 bg-gradient-to-r from-white to-blue-50">
-      <div class="mr-4">
-        <div class="text-sm text-gray-500">Sales: <span
-            class="font-medium text-gray-700 hover:text-blue-600 transition-colors duration-200 cursor-pointer">Godiya
-            Kumari</span></div>
-      </div>
-      <div class="bg-blue-700 text-white font-bold py-2 px-3 rounded-lg shadow-md pulse-animation">
-        <div class="text-xs">MSME</div>
-        <div class="text-lg">629</div>
-      </div>
-    </div>
+
+<ng-template #noData>
+  <div class="mt-4 p-6 bg-yellow-50 text-yellow-800 border border-yellow-300 rounded-lg shadow-sm text-center">
+    <i class="fas fa-info-circle mr-2"></i> No records found.
   </div>
-
-  <!-- Content Section -->
-  <div class="flex flex-col md:flex-row">
-    <!-- Left Column -->
-    <div class="w-full md:w-7/12 p-4">
-      <div class="mb-4">
-        <div class="flex justify-between items-center mb-2">
-          <div class="font-semibold text-blue-700">
-            <span>Location: </span>
-            <span class="text-blue-500 underline cursor-pointer hover:text-blue-700 transition-colors duration-200">In
-              Lead</span>
-          </div>
-          <div class="text-sm text-gray-500">
-            <a href="#" class="text-blue-600 hover:text-blue-800 transition-colors duration-200 flex items-center">
-              <i class="fas fa-search mr-1"></i> Search Form
-            </a>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-          <div class="bg-blue-50 p-3 rounded-lg hover:bg-blue-100 transition-colors duration-200">
-            <div class="text-sm text-gray-500 mb-1 flex items-center">
-              <i class="fas fa-user mr-1 text-blue-500"></i> Name:
-            </div>
-            <div class="font-medium">Ravi</div>
-          </div>
-          <div class="bg-blue-50 p-3 rounded-lg hover:bg-blue-100 transition-colors duration-200">
-            <div class="text-sm text-gray-500 mb-1 flex items-center">
-              <i class="fas fa-phone mr-1 text-blue-500"></i> Mobile:
-            </div>
-            <div class="font-medium">
-              <a href="tel:8529365558" class="hover:text-blue-600 transition-colors duration-200">8342465558</a>
-            </div>
-          </div>
-          <div class="bg-blue-50 p-3 rounded-lg hover:bg-blue-100 transition-colors duration-200">
-            <div class="text-sm text-gray-500 mb-1 flex items-center">
-              <i class="fas fa-envelope mr-1 text-blue-500"></i> Email:
-            </div>
-            <div class="font-medium">
-              <a href="mailto:raviravikant43@gmail.com"
-                class="text-blue-600 hover:text-blue-800 transition-colors duration-200">raviravikant43@gmail.com</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Action Buttons -->
-      <div class="flex flex-wrap gap-2 mt-8">
-        <button [routerLink]="['/panel/form-view']"
-          class="bg-cyan-500 hover:bg-cyan-600 text-white py-2 px-4 rounded-md flex items-center shadow transition-all duration-200 btn-hover">
-          <i class="fas fa-search mr-2"></i> View Form
-        </button>
-        <button
-          class="bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded-md flex items-center shadow transition-all duration-200 btn-hover">
-          <i class="fas fa-money-bill-wave mr-2"></i> Mark As Paid
-        </button>
-      </div>
-    </div>
-
-    <!-- Right Column -->
-    <div class="w-full md:w-5/12 bg-gray-50">
-      <!-- Remarks Section -->
-      <div class="p-4 bg-blue-50 h-full">
-        <div class="font-semibold text-gray-700 mb-2 flex items-center">
-          <i class="fas fa-comment-alt text-blue-600 mr-2"></i> Remarks:
-        </div>
-        <ul class="list-disc ml-5 text-gray-600">
-          <li class="mb-2">MAY BE PAY</li>
-          <li class="hidden mb-2 remark-item">Follow up in 2 days</li>
-        </ul>
-
-        <!-- Activity Log -->
-        <div class="mt-6">
-          <div class="font-semibold text-gray-700 mb-2 flex items-center">
-            <i class="fas fa-history text-blue-600 mr-2"></i> Activity Log:
-          </div>
-          <div class="space-y-2 mt-2 text-sm text-gray-600">
-            <div class="flex items-start">
-              <div class="min-w-8 mr-2">
-                <i class="fas fa-circle text-blue-400 text-xs"></i>
-              </div>
-              <div>
-                <span class="text-gray-800 font-medium">System</span> created client record
-                <div class="text-xs text-gray-500">Today, 10:55:51</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Main Card -->
-<div
-  class="mt-3 bg-white border-t-2 border-blue-900 shadow-lg overflow-hidden transition-all duration-300 card-hover-effect">
-  <!-- Header Section -->
-  <div class="flex flex-col md:flex-row justify-between border-b border-gray-200">
-    <div class="p-4">
-      <div class="flex items-center">
-        <div class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">ID: 24-2023 | 10:55:51</div>
-      </div>
-      <div class="font-bold text-blue-800 uppercase mt-1 flex items-center">
-        <i class="fas fa-globe text-blue-600 mr-2"></i>
-        EUROTRADEMART.ORG
-      </div>
-      <div class="mt-1">
-        <span
-          class="text-xs bg-green-100 text-green-600 font-semibold px-2 py-1 rounded-full status-badge flex items-center w-fit">
-          <i class="fas fa-circle text-xs mr-1"></i>
-          PENDING
-        </span>
-      </div>
-    </div>
-    <div class="flex items-center p-4 bg-gradient-to-r from-white to-blue-50">
-      <div class="mr-4">
-        <div class="text-sm text-gray-500">Sales: <span
-            class="font-medium text-gray-700 hover:text-blue-600 transition-colors duration-200 cursor-pointer">Godiya
-            Kumari</span></div>
-      </div>
-      <div class="bg-blue-700 text-white font-bold py-2 px-3 rounded-lg shadow-md pulse-animation">
-        <div class="text-xs">MSME</div>
-        <div class="text-lg">629</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Content Section -->
-  <div class="flex flex-col md:flex-row">
-    <!-- Left Column -->
-    <div class="w-full md:w-7/12 p-4">
-      <div class="mb-4">
-        <div class="flex justify-between items-center mb-2">
-          <div class="font-semibold text-blue-700">
-            <span>Location: </span>
-            <span class="text-blue-500 underline cursor-pointer hover:text-blue-700 transition-colors duration-200">In
-              Lead</span>
-          </div>
-          <div class="text-sm text-gray-500">
-            <a href="#" class="text-blue-600 hover:text-blue-800 transition-colors duration-200 flex items-center">
-              <i class="fas fa-search mr-1"></i> Search Form
-            </a>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-          <div class="bg-blue-50 p-3 rounded-lg hover:bg-blue-100 transition-colors duration-200">
-            <div class="text-sm text-gray-500 mb-1 flex items-center">
-              <i class="fas fa-user mr-1 text-blue-500"></i> Name:
-            </div>
-            <div class="font-medium">Ravi</div>
-          </div>
-          <div class="bg-blue-50 p-3 rounded-lg hover:bg-blue-100 transition-colors duration-200">
-            <div class="text-sm text-gray-500 mb-1 flex items-center">
-              <i class="fas fa-phone mr-1 text-blue-500"></i> Mobile:
-            </div>
-            <div class="font-medium">
-              <a href="tel:8529365558" class="hover:text-blue-600 transition-colors duration-200">8342465558</a>
-            </div>
-          </div>
-          <div class="bg-blue-50 p-3 rounded-lg hover:bg-blue-100 transition-colors duration-200">
-            <div class="text-sm text-gray-500 mb-1 flex items-center">
-              <i class="fas fa-envelope mr-1 text-blue-500"></i> Email:
-            </div>
-            <div class="font-medium">
-              <a href="mailto:raviravikant43@gmail.com"
-                class="text-blue-600 hover:text-blue-800 transition-colors duration-200">raviravikant43@gmail.com</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Action Buttons -->
-      <div class="flex flex-wrap gap-2 mt-8">
-        <button [routerLink]="['/panel/form-view']"
-          class="bg-cyan-500 hover:bg-cyan-600 text-white py-2 px-4 rounded-md flex items-center shadow transition-all duration-200 btn-hover">
-          <i class="fas fa-search mr-2"></i> View Form
-        </button>
-        <button
-          class="bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded-md flex items-center shadow transition-all duration-200 btn-hover">
-          <i class="fas fa-money-bill-wave mr-2"></i> Mark As Paid
-        </button>
-      </div>
-    </div>
-
-    <!-- Right Column -->
-    <div class="w-full md:w-5/12 bg-gray-50">
-      <!-- Remarks Section -->
-      <div class="p-4 bg-blue-50 h-full">
-        <div class="font-semibold text-gray-700 mb-2 flex items-center">
-          <i class="fas fa-comment-alt text-blue-600 mr-2"></i> Remarks:
-        </div>
-        <ul class="list-disc ml-5 text-gray-600">
-          <li class="mb-2">MAY BE PAY</li>
-          <li class="hidden mb-2 remark-item">Follow up in 2 days</li>
-        </ul>
-
-        <!-- Activity Log -->
-        <div class="mt-6">
-          <div class="font-semibold text-gray-700 mb-2 flex items-center">
-            <i class="fas fa-history text-blue-600 mr-2"></i> Activity Log:
-          </div>
-          <div class="space-y-2 mt-2 text-sm text-gray-600">
-            <div class="flex items-start">
-              <div class="min-w-8 mr-2">
-                <i class="fas fa-circle text-blue-400 text-xs"></i>
-              </div>
-              <div>
-                <span class="text-gray-800 font-medium">System</span> created client record
-                <div class="text-xs text-gray-500">Today, 10:55:51</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+</ng-template>

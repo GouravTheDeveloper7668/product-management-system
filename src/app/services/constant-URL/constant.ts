@@ -8,6 +8,7 @@ import { environment } from "src/environments/environment";
 export class Constant {
     private apiUrl = environment.apiUrl;
     dashboardAPI = {
-        cardStatus : 'dashboard-api/status-card'
+        cardStatus : 'dashboard-api/status-card',
+        filterCardStatus : 'dashbpard-api/getFormDataNumFilter',
     }
 }
