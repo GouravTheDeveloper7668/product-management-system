@@ -1,31 +1,43 @@
-image: node:18
+name: Build and Deploy Angular
 
-stages:
-  - build
-  - deploy
+on:
+  push:
+    branches:
+      - main
 
-build-job:
-  stage: build
-  script:
-    - npm install -g @angular/cli       # Install Angular CLI
-    - npm install                        # Install project dependencies
-    - ng build --configuration=production   # Build the Angular project with the production configuration
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
 
-  artifacts:
-    paths:
-      - dist/
-    expire_in: 1 hour
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-deploy-job:
-  stage: deploy
-  script:
-    - apt-get update && apt-get install -y lftp   # Install lftp for FTP/SFTP
-    - lftp -c "
-        set ssl:verify-certificate no;
-        open -u u409719797.crmtourbiz,2/Ie!!Gp[FsTzL3H ftp.tourbiz.shop;
-        cd /home/u409719797/domains/tourbiz.shop/public_html/crm;
-        mirror -R ./dist/my-app .;
-        bye
-      "
-  only:
-    - main    # Deploy only from the main branch
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install Angular CLI
+        run: npm install -g @angular/cli
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Angular
+        run: ng build --configuration=production --base-href /crm/
+
+      - name: Install lftp
+        run: sudo apt-get update && sudo apt-get install -y lftp
+
+      - name: Deploy via FTP
+        run: |
+          lftp -e "
+          set ssl:verify-certificate no;
+          open -u u409719797.crmtourbiz,2/Ie!!Gp[FsTzL3H ftp.tourbiz.shop;
+          cd /home/u409719797/domains/tourbiz.shop/public_html/crm;
+          mirror -R --delete dist/my-app .;
+          bye
+          "
+
+
